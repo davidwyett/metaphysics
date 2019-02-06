@@ -3,7 +3,9 @@ import {
   GraphQLBoolean,
   GraphQLInt,
   GraphQLObjectType,
+  GraphQLFieldConfig,
 } from "graphql"
+import { ResolverContext } from "types/graphql"
 
 const SystemTimeType = new GraphQLObjectType<ResolverContext>({
   name: "SystemTime",
@@ -25,11 +27,11 @@ const SystemTimeType = new GraphQLObjectType<ResolverContext>({
   },
 })
 
-const SystemTime = {
+const SystemTime: GraphQLFieldConfig<any, ResolverContext> = {
   type: SystemTimeType,
   description:
     "Gravity system time, necessary for synchronizing device clocks.",
-  resolve: (_root, _options, _request, { rootValue: { systemTimeLoader } }) => {
+  resolve: (_root, _options, { systemTimeLoader }) => {
     return systemTimeLoader()
   },
 }

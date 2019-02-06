@@ -1,6 +1,7 @@
 import { GraphQLString, GraphQLObjectType } from "graphql"
 import moment from "moment"
 import _ from "lodash"
+import { ResolverContext } from "types/graphql"
 
 enum DayOfWeek {
   Monday = "Monday",
@@ -103,6 +104,7 @@ const FormattedDaySchedulesType = new GraphQLObjectType<ResolverContext>({
   }),
 })
 
+// TODO: This isn't being used as a GraphQLFieldConfig, it seems.
 export const FormattedDaySchedules = {
   type: FormattedDaySchedulesType,
   resolve: formatDaySchedules,

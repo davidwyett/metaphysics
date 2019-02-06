@@ -1,5 +1,6 @@
 import gravity from "lib/apis/gravity" // Uncached
-import { GraphQLObjectType, GraphQLBoolean } from "graphql"
+import { GraphQLObjectType, GraphQLBoolean, GraphQLFieldConfig } from "graphql"
+import { ResolverContext } from "types/graphql"
 
 const StatusType = new GraphQLObjectType<ResolverContext>({
   name: "Status",
@@ -30,7 +31,7 @@ const StatusType = new GraphQLObjectType<ResolverContext>({
   },
 })
 
-const Status = {
+const Status: GraphQLFieldConfig<never, ResolverContext> = {
   type: StatusType,
   resolve: () => ({}),
 }

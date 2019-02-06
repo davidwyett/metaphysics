@@ -1,6 +1,7 @@
-import { GraphQLObjectType } from "graphql"
+import { GraphQLObjectType, GraphQLFieldConfig } from "graphql"
 
 import SystemTime from "./time"
+import { ResolverContext } from "types/graphql"
 
 const SystemType = new GraphQLObjectType<ResolverContext>({
   name: "System",
@@ -9,7 +10,7 @@ const SystemType = new GraphQLObjectType<ResolverContext>({
   },
 })
 
-const System = {
+const System: GraphQLFieldConfig<never, ResolverContext> = {
   type: SystemType,
   description: "Fields related to internal systems.",
   resolve: () => {
