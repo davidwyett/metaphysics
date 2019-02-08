@@ -61,7 +61,7 @@ interface BatchLoaderArgs {
   defaultResult?: any
 }
 
-export const batchLoader = ({
+const batchLoader = ({
   singleLoader,
   multipleLoader,
   defaultResult = null,
@@ -93,15 +93,25 @@ export const batchLoader = ({
   return key => dl.load(key)
 }
 
+type PathLoader = StaticPathLoader<any> | DynamicPathLoader<any, any>
+
 /**
  * @returns a tuple of a single batch loader and a multiple batch loader
  */
-export const createBatchLoaders = ({
+export const createBatchLoaders = <
+  SL extends PathLoader,
+  ML extends PathLoader
+>({
   singleLoader,
   multipleLoader,
   singleDefault,
   multipleDefault,
-}) => {
+}: {
+  singleLoader: SL
+  multipleLoader: ML
+  singleDefault?: any
+  multipleDefault?: any
+}): [SL, ML] => {
   return [
     batchLoader({
       singleLoader,

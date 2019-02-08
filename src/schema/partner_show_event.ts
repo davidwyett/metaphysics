@@ -1,5 +1,6 @@
 import date from "./fields/date"
 import { GraphQLString, GraphQLObjectType } from "graphql"
+import { ResolverContext } from "types/graphql"
 
 const PartnerShowEventType = new GraphQLObjectType<ResolverContext>({
   name: "PartnerShowEventType",

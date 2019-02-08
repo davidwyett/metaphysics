@@ -21,6 +21,7 @@ import {
 } from "graphql"
 import config from "config"
 import { ResolverContext } from "types/graphql"
+import { LoadersWithoutAuthentication } from "lib/loaders/loaders_without_authentication"
 
 const { BIDDER_POSITION_MAX_BID_AMOUNT_CENTS_LIMIT } = config
 
@@ -33,6 +34,11 @@ const bid_increments_calculator = async ({
   saleLoader,
   incrementsLoader,
   minimum_next_bid_cents,
+}: {
+  sale_id: string
+  saleLoader: LoadersWithoutAuthentication["saleLoader"]
+  incrementsLoader: LoadersWithoutAuthentication["incrementsLoader"]
+  minimum_next_bid_cents: number
 }) => {
   const sale = await saleLoader(sale_id)
   if (!sale.increment_strategy) {
@@ -89,8 +95,7 @@ const SaleArtworkType = new GraphQLObjectType<ResolverContext>({
         resolve: (
           { minimum_next_bid_cents, sale_id },
           _options,
-          _request,
-          { rootValue: { incrementsLoader, saleLoader } }
+          { incrementsLoader, saleLoader }
         ) => {
           return bid_increments_calculator({
             sale_id,
@@ -197,8 +202,7 @@ const SaleArtworkType = new GraphQLObjectType<ResolverContext>({
         resolve: async (
           { _id, minimum_next_bid_cents, sale_id, symbol },
           { useMyMaxBid },
-          _request,
-          { rootValue: { incrementsLoader, lotStandingLoader, saleLoader } }
+          { incrementsLoader, lotStandingLoader, saleLoader }
         ) => {
           let minimumNextBid
           minimumNextBid = minimum_next_bid_cents
@@ -250,12 +254,7 @@ const SaleArtworkType = new GraphQLObjectType<ResolverContext>({
       is_biddable: {
         type: GraphQLBoolean,
         description: "Can bids be placed on the artwork?",
-        resolve: (
-          saleArtwork,
-          _options,
-          _request,
-          { rootValue: { saleLoader } }
-        ) => {
+        resolve: (saleArtwork, _options, { saleLoader }) => {
           if (!!saleArtwork.sale) {
             return isBiddable(saleArtwork.sale, saleArtwork)
           }
@@ -340,12 +339,7 @@ const SaleArtworkType = new GraphQLObjectType<ResolverContext>({
       sale_id: { type: GraphQLString },
       sale: {
         type: Sale.type,
-        resolve: (
-          { sale, sale_id },
-          _options,
-          _request,
-          { rootValue: { saleLoader } }
-        ) => {
+        resolve: ({ sale, sale_id }, _options, { saleLoader }) => {
           if (!!sale) return sale
           return saleLoader(sale_id)
         },

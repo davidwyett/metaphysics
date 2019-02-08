@@ -89,6 +89,7 @@ import { BidderPositionMutation } from "./me/bidder_position_mutation"
 import CausalityJWT from "./causality_jwt"
 import ObjectIdentification from "./object_identification"
 import { GraphQLSchema, GraphQLObjectType } from "graphql"
+import { ResolverContext } from "types/graphql"
 
 import config from "config"
 import { BuyOrderType, OfferOrderType } from "./ecommerce/types/order"

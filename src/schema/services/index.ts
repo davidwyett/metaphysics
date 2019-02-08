@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLNonNull } from "graphql"
+import { GraphQLObjectType, GraphQLNonNull, GraphQLFieldConfig } from "graphql"
 
 import Convection from "./convection"
 import Metaphysics from "./metaphysics"
@@ -16,11 +16,11 @@ const ServicesSchema = new GraphQLObjectType<ResolverContext>({
   }),
 })
 
-const Services = {
+const Services: GraphQLFieldConfig<never, ResolverContext> = {
   type: ServicesSchema,
   description: "The schema for difference micro-service settings",
   args: {},
-  resolve: (_source, _args, context) => ({
+  resolve: () => ({
     convection: Convection.resolve(),
     metaphysics: Metaphysics.resolve(),
   }),

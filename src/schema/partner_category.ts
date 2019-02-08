@@ -3,7 +3,13 @@ import cached from "./fields/cached"
 import Partners from "./partners"
 import CategoryType from "./input_fields/category_type"
 import { IDFields } from "./object_identification"
-import { GraphQLString, GraphQLObjectType, GraphQLNonNull } from "graphql"
+import {
+  GraphQLString,
+  GraphQLObjectType,
+  GraphQLNonNull,
+  GraphQLFieldConfig,
+} from "graphql"
+import { ResolverContext } from "types/graphql"
 
 const PartnerCategoryType = new GraphQLObjectType<ResolverContext>({
   name: "PartnerCategory",
@@ -17,7 +23,7 @@ const PartnerCategoryType = new GraphQLObjectType<ResolverContext>({
     partners: {
       type: Partners.type,
       args: Partners.args,
-      resolve: ({ id }, options, _request, { rootValue: { partnersLoader } }) =>
+      resolve: ({ id }, options, { partnersLoader }) =>
         partnersLoader(
           _.defaults(options, {
             partner_categories: [id],
@@ -27,7 +33,7 @@ const PartnerCategoryType = new GraphQLObjectType<ResolverContext>({
   }),
 })
 
-const PartnerCategory = {
+const PartnerCategory: GraphQLFieldConfig<never, ResolverContext> = {
   type: PartnerCategoryType,
   description: "A PartnerCategory",
   args: {
@@ -36,12 +42,8 @@ const PartnerCategory = {
       description: "The slug or ID of the PartnerCategory",
     },
   },
-  resolve: (
-    _root,
-    { id },
-    _request,
-    { rootValue: { partnerCategoryLoader } }
-  ) => partnerCategoryLoader(id),
+  resolve: (_root, { id }, { partnerCategoryLoader }) =>
+    partnerCategoryLoader(id),
 }
 
 export default PartnerCategory

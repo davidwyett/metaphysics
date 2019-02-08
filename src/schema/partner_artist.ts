@@ -10,6 +10,9 @@ import {
 } from "graphql"
 import { connectionDefinitions, connectionFromArraySlice } from "graphql-relay"
 import { getPagingParameters } from "relay-cursor-paging"
+import { ResolverContext } from "types/graphql"
+import { StaticPathLoader } from "lib/loaders/api/loader_interface"
+import { BodyAndHeaders } from "lib/loaders"
 
 const counts = {
   type: new GraphQLObjectType<ResolverContext>({
@@ -96,7 +99,11 @@ export const PartnerArtistConnection = connectionDefinitions({
   edgeFields: fields,
 }).connectionType
 
-export const partnersForArtist = (artist_id, options, loader) => {
+export const partnersForArtist = (
+  artist_id,
+  options,
+  loader: StaticPathLoader<BodyAndHeaders>
+) => {
   // Convert `after` cursors to page params
   const { limit: size, offset } = getPagingParameters(options)
   // Construct an object of all the params gravity will listen to

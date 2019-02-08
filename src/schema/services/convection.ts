@@ -1,5 +1,6 @@
 import { GraphQLString, GraphQLObjectType, GraphQLNonNull } from "graphql"
 import config from "config"
+import { ResolverContext } from "types/graphql"
 
 const ConvectionSchema = new GraphQLObjectType<ResolverContext>({
   name: "Convection",
@@ -10,6 +11,7 @@ const ConvectionSchema = new GraphQLObjectType<ResolverContext>({
   }),
 })
 
+// TODO: This isn't being used as a GraphQLFieldConfig, it seems.
 const Convection = {
   type: ConvectionSchema,
   description: "The schema for convection's ENV settings",

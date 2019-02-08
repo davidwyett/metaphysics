@@ -3,7 +3,6 @@ import {
   GraphQLNonNull,
   GraphQLBoolean,
   GraphQLString,
-  GraphQLFieldConfig,
 } from "graphql"
 import config from "config"
 import { ResolverContext } from "types/graphql"

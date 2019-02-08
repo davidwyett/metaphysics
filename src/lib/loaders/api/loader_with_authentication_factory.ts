@@ -5,7 +5,7 @@ import { loaderInterface } from "./loader_interface"
 import timer from "lib/timer"
 import { verbose, warn } from "lib/loggers"
 import logger from "lib/loaders/api/logger"
-import { LoaderFactory } from "./index"
+import { LoaderFactory } from "../index"
 
 /**
  * This returns a function that takes an access token to create a data loader factory for the given `api`.

@@ -1,5 +1,55 @@
-import loadersWithAuthentication from "./loaders_with_authentication"
-import loadersWithoutAuthentication from "./loaders_without_authentication"
+import {
+  createLoadersWithAuthentication,
+  LoadersWithAuthentication,
+} from "./loaders_with_authentication"
+import {
+  createLoadersWithoutAuthentication,
+  LoadersWithoutAuthentication,
+} from "./loaders_without_authentication"
+import { APIOptions } from "./api"
+import {
+  StaticPathLoader,
+  DynamicPathLoader,
+  PathGenerator,
+} from "./api/loader_interface"
+
+export type BodyAndHeaders<B = any, H = any> = {
+  body: B
+  headers: H
+}
+
+export interface LoaderFactory {
+  <B = any>(
+    path: string,
+    globalParams?: any,
+    pathAPIOptions?: APIOptions
+  ): StaticPathLoader<B>
+  <B = any, P = string>(
+    path: PathGenerator<P>,
+    globalParams?: any,
+    pathAPIOptions?: APIOptions
+  ): DynamicPathLoader<B, P>
+  <B = any>(
+    path: string,
+    globalParams: any,
+    pathAPIOptions: { headers: false } & APIOptions
+  ): StaticPathLoader<B>
+  <B = any, P = string>(
+    path: PathGenerator<P>,
+    globalParams: any,
+    pathAPIOptions: { headers: false } & APIOptions
+  ): DynamicPathLoader<B, P>
+  <B = any, H = any>(
+    path: string,
+    globalParams: any,
+    pathAPIOptions: { headers: true } & APIOptions
+  ): StaticPathLoader<BodyAndHeaders<B, H>>
+  <B = any, P = string, H = any>(
+    path: PathGenerator<P>,
+    globalParams: any,
+    pathAPIOptions: { headers: true } & APIOptions
+  ): DynamicPathLoader<BodyAndHeaders<B, H>, P>
+}
 
 /**
  * Creates a new set of data loaders for all routes. These should be created for each GraphQL query and passed to the
@@ -12,14 +62,13 @@ export default (
   accessToken,
   userID,
   opts
-): ReturnType<typeof loadersWithoutAuthentication> &
-  Partial<ReturnType<typeof loadersWithAuthentication>> => {
-  const loaders = loadersWithoutAuthentication(opts)
+): LoadersWithoutAuthentication & Partial<LoadersWithAuthentication> => {
+  const loaders = createLoadersWithoutAuthentication(opts)
   if (accessToken) {
     return Object.assign(
       {},
       loaders,
-      loadersWithAuthentication(accessToken, userID, opts)
+      createLoadersWithAuthentication(accessToken, userID, opts)
     )
   }
   return loaders

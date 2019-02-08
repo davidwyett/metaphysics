@@ -8,7 +8,9 @@ import {
   GraphQLObjectType,
   GraphQLNonNull,
   GraphQLBoolean,
+  GraphQLFieldConfig,
 } from "graphql"
+import { ResolverContext } from "types/graphql"
 
 export const ProfileType = new GraphQLObjectType<ResolverContext>({
   name: "Profile",
@@ -67,7 +69,7 @@ export const ProfileType = new GraphQLObjectType<ResolverContext>({
   }),
 })
 
-const Profile = {
+const Profile: GraphQLFieldConfig<never, ResolverContext> = {
   type: ProfileType,
   description: "A Profile",
   args: {
@@ -76,8 +78,7 @@ const Profile = {
       description: "The slug or ID of the Profile",
     },
   },
-  resolve: (_root, { id }, _request, { rootValue: { profileLoader } }) =>
-    profileLoader(id),
+  resolve: (_root, { id }, { profileLoader }) => profileLoader(id),
 }
 
 export default Profile
